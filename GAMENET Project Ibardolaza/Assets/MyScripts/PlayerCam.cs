@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class PlayerCam : MonoBehaviour
+public class PlayerCam : NetworkBehaviour
 {
     public float xSens;
     public float ySens;
@@ -19,7 +20,7 @@ public class PlayerCam : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * xSens;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * ySens;

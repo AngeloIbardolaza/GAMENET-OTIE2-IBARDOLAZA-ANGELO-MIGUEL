@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     [Header("Movement")]
 
@@ -44,11 +45,19 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!isLocalPlayer)
+            return;
+
         grounded = Physics.Raycast(playerObj.position + Vector3.down * 0.5f, Vector3.down, playerHeight / 2 + 0.5f);
         Debug.DrawRay(playerObj.position + Vector3.down * 0.5f, Vector3.down * 3f, Color.red);
 
         MyInput();
         SpeedControl();
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            CmdSendMessage();
+        }
 
         if (grounded)
             rb.drag = groundDrag;
@@ -71,6 +80,8 @@ public class PlayerMovement : MonoBehaviour
             readyToJump = false;
 
             Jump();
+
+            RpcJumpMessage();
 
             Invoke(nameof(ResetJump), jumpCooldown);
         }
@@ -108,5 +119,23 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+    }
+
+    [Command]
+    void CmdSendMessage()
+    {
+        Debug.Log("warafen bella why are you crying again i know vamfire right? vampire will feyt to me");
+        RpcSendMessage();
+    }
+
+    [ClientRpc]
+    void RpcSendMessage()
+    {
+        Debug.Log("edward what are you doing here trusted to protect bella but you did not i will sure you die edward  i will sure you die from now on, she's mine");
+    }
+
+    void RpcJumpMessage() // For testing; triggers every jump
+    {
+        Debug.Log("I have died everyday waiting for you");
     }
 }
